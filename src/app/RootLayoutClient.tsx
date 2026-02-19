@@ -12,7 +12,7 @@ export function RootLayoutClient({ children }: RootLayoutClientProps) {
   return (
     <ThemeProvider>
       <I18nProvider>
-        <div className="bg-main-l dark:bg-main-d text-main-d dark:text-main-l min-h-screen">
+        <div className="">
           <Header />
           {children}
         </div>

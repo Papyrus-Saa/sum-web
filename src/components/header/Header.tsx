@@ -5,9 +5,9 @@ import LanguageSwitcher from "../language-switcher/LanguageSwitcher"
 const Header = () => {
 
   return (
-    <div>
-      <header className="flex justify-between items-center p-2 lg:p-6">
-        <div>
+
+      <header className="flex justify-between items-center p-2 lg:p-6 mb-12">
+        <div className="">
           <BrandTitle title="Sum" className="md:text-2xl font-bold text-primary border-b border-secondary" />
           <BrandTitle title="Tirecode" className="md:text-2xl font-bold text-secondary border-t border-primary" />
         </div>
@@ -16,7 +16,7 @@ const Header = () => {
           <ThemeToggle />
         </div>
       </header>
-    </div>
+
   )
 }
 

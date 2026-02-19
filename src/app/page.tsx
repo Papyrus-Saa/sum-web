@@ -12,12 +12,14 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-  const content = !mounted || !ready ? DEFAULT_TRANSLATIONS.mainTitle : t('mainTitle');
+  const title = !mounted || !ready ? DEFAULT_TRANSLATIONS.mainTitle : t('mainTitle');
 
   return (
-    <div className="flex flex-col">
-      <main className="flex flex-1 items-center justify-center px-6">
-        {content}
+    <div className="">
+      <main className="flex flex-col items-center justify-center">
+        <h1 className="font-semibold text-center px-1 sm:text-xl md:text-2xl lg:text-3xl lg:max-w-2xl">
+          {title}
+        </h1>
       </main>
     </div>
   );

@@ -7,7 +7,7 @@ interface BrandTitleProps {
 
 const BrandTitle = ({ title, className }: BrandTitleProps) => {
   return (
-    <span className={className}>{title}</span>
+    <span className={`${className} py-1`}>{title}</span>
   )
 }
 
