@@ -36,7 +36,7 @@ describe('Home Page', () => {
 
     it('should display german title on DE language', async () => {
       renderPage(<Home />);
-      
+
       await waitFor(() => {
         const heading = screen.getByRole('heading', { level: 1 });
         expect(heading.textContent).toBeTruthy();
