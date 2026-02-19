@@ -12,9 +12,9 @@ jest.mock('next/router', () => ({
       reload: jest.fn(),
       back: jest.fn(),
       forward: jest.fn(),
-      prefetch: jest.fn(),
+      prefetch: jest.fn()
     };
-  },
+  }
 }));
 
 Object.defineProperty(window, 'matchMedia', {
@@ -27,18 +27,15 @@ Object.defineProperty(window, 'matchMedia', {
     removeListener: jest.fn(),
     addEventListener: jest.fn(),
     removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
+    dispatchEvent: jest.fn()
+  }))
 });
 
 // Suppress console warnings in tests
 const originalError = console.error;
 beforeAll(() => {
-  console.error = (...args: any[]) => {
-    if (
-      typeof args[0] === 'string' &&
-      args[0].includes('Warning: ReactDOM.render')
-    ) {
+  console.error = (...args: unknown[]) => {
+    if (typeof args[0] === 'string' && args[0].includes('Warning: ReactDOM.render')) {
       return;
     }
     originalError.call(console, ...args);

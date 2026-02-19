@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import BrandTitle from '../BrandTitle';
 
@@ -22,19 +21,9 @@ describe('BrandTitle Component', () => {
     });
 
     it('should apply custom className', () => {
-      render(
-        <BrandTitle
-          title="Title"
-          className="text-primary text-2xl font-bold"
-        />
-      );
+      render(<BrandTitle title="Title" className="text-primary text-2xl font-bold" />);
       const element = screen.getByText('Title');
-      expect(element).toHaveClass(
-        'text-primary',
-        'text-2xl',
-        'font-bold',
-        'py-1'
-      );
+      expect(element).toHaveClass('text-primary', 'text-2xl', 'font-bold', 'py-1');
     });
 
     it('should combine custom className with default py-1', () => {

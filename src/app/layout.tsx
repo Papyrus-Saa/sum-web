@@ -1,36 +1,24 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Josefin_Sans } from "next/font/google";
-import { RootLayoutClient } from "./RootLayoutClient";
-import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import type { Metadata } from 'next';
+import { Josefin_Sans } from 'next/font/google';
+import { RootLayoutClient } from './RootLayoutClient';
+import './globals.css';
 
 const josefinSans = Josefin_Sans({
-  variable: "--font-josefin-sans",
-  subsets: ["latin"],
+  variable: '--font-josefin-sans',
+  subsets: ['latin']
 });
 
 export const metadata: Metadata = {
-  title: "SumTirecode",
-  description: "Search and manage tire codes",
+  title: 'SumTirecode',
+  description: 'Search and manage tire codes'
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="de" suppressHydrationWarning>
-      <body className={`${josefinSans.variable} [font-family:var(--font-josefin-sans)] antialiased bg-main-l dark:bg-main-d text-main-d dark:text-main-l min-h-screen lg:px-20`}>
+      <body
+        className={`${josefinSans.variable} [font-family:var(--font-josefin-sans)] antialiased bg-main-l dark:bg-main-d text-main-d dark:text-main-l min-h-screen lg:px-20`}
+      >
         <RootLayoutClient>{children}</RootLayoutClient>
       </body>
     </html>

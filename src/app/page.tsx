@@ -1,18 +1,19 @@
-"use client";
+'use client';
 
-import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
-import { DEFAULT_TRANSLATIONS } from "@/i18n/defaultTranslations";
+import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
+import { DEFAULT_TRANSLATIONS } from '@/i18n/defaultTranslations';
 
-export default function Home() {
+export default function Home(): React.ReactElement {
   const { t, ready } = useTranslation();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
-  const title = !mounted || !ready ? DEFAULT_TRANSLATIONS.mainTitle : t('mainTitle');
+  const title = !mounted || !ready ? DEFAULT_TRANSLATIONS.mainTitle : (t('mainTitle') as string);
 
   return (
     <div className="">

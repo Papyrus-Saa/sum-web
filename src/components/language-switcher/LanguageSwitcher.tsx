@@ -1,20 +1,16 @@
-"use client";
+'use client';
 
-import { Languages } from "lucide-react";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { AVAILABLE_LANGUAGES } from "@/i18n/languages";
+import { Languages } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { AVAILABLE_LANGUAGES } from '@/i18n/languages';
 
-interface LanguageSwitcherProps {
-  label?: string;
-}
-
-const LanguageSwitcher = ({ label }: LanguageSwitcherProps) => {
+const LanguageSwitcher = (): React.ReactElement => {
   const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
 
-  const handleLanguageChange = (locale: string) => {
-    i18n.changeLanguage(locale);
+  const handleLanguageChange = (locale: string): void => {
+    void i18n.changeLanguage(locale);
     setOpen(false);
   };
 
@@ -36,7 +32,7 @@ const LanguageSwitcher = ({ label }: LanguageSwitcherProps) => {
       </button>
       {open && (
         <div className="absolute right-0 mt-2 w-32 rounded z-50 bg-card-l dark:bg-card-d">
-          {AVAILABLE_LANGUAGES.map((lang) => (
+          {AVAILABLE_LANGUAGES.map(lang => (
             <button
               key={lang.code}
               onClick={() => handleLanguageChange(lang.code)}
