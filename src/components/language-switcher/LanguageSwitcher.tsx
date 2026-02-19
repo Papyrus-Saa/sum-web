@@ -35,7 +35,7 @@ const LanguageSwitcher = ({ label }: LanguageSwitcherProps) => {
         <span className="hidden sm:block">{t('language')}</span>
       </button>
       {open && (
-        <div className="absolute right-0 mt-2 w-32 bg-primary md:bg-primary/10 border border-primary/20 rounded z-50">
+        <div className="absolute right-0 mt-2 w-32 rounded z-50 bg-card-l dark:bg-card-d">
           {AVAILABLE_LANGUAGES.map((lang) => (
             <button
               key={lang.code}
