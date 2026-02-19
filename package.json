@@ -15,7 +15,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:ci": "jest --ci --coverage --maxWorkers=2",
-    "validate": "npm run type-check && npm run lint && npm run test:ci"
+    "validate": "npm run type-check && npm run lint && npm run test:ci",
+    "prepare": "husky"
   },
   "dependencies": {
     "i18next": "^25.8.11",

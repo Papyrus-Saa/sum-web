@@ -1,3 +1,4 @@
+#!/bin/sh
 commit_msg=$(cat "$1")
 
 if ! echo "$commit_msg" | grep -qE "^(feat|fix|docs|style|refactor|perf|test|chore|ci|revert)(\(.+\))?!?:"; then
