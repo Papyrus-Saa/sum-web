@@ -1,0 +1,26 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+commit_msg=$(cat "$1")
+
+if ! echo "$commit_msg" | grep -qE "^(feat|fix|docs|style|refactor|perf|test|chore|ci|revert)(\(.+\))?!?:"; then
+  echo "❌ Invalid commit message format"
+  echo ""
+  echo "Valid formats:"
+  echo "  feat:      New feature"
+  echo "  fix:       Bug fix"
+  echo "  docs:      Documentation"
+  echo "  style:     Code style (formatting, etc)"
+  echo "  refactor:  Code refactoring"
+  echo "  perf:      Performance improvement"
+  echo "  test:      Test changes"
+  echo "  chore:     Build, deps, or tooling"
+  echo "  ci:        CI/CD changes"
+  echo "  revert:    Revert previous commit"
+  echo ""
+  echo "Examples:"
+  echo "  feat(auth): add login functionality"
+  echo "  fix: resolve memory leak in cache"
+  echo "  docs(readme): update installation steps"
+  exit 1
+fi
