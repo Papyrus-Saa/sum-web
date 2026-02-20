@@ -1,5 +1,7 @@
 import { API_CONFIG, TIRE_SIZE_PATTERN, TIRE_CODE_PATTERN, TIRE_VARIANT_PATTERN } from '../api';
 
+const endpoints = API_CONFIG.endpoints as Record<string, unknown>;
+
 describe('API Configuration', () => {
   describe('API_CONFIG object', () => {
     it('should have baseUrl defined', () => {
@@ -21,85 +23,86 @@ describe('API Configuration', () => {
     });
 
     it('should have endpoints object', () => {
-      expect(API_CONFIG.endpoints).toBeDefined();
-      expect(typeof API_CONFIG.endpoints).toBe('object');
+      expect(endpoints).toBeDefined();
+      expect(typeof endpoints).toBe('object');
     });
 
     it('should have lookup endpoint', () => {
-      expect(API_CONFIG.endpoints.lookup).toBeDefined();
-      expect(API_CONFIG.endpoints.lookup).toBe('/api/v1/lookup');
+      expect(endpoints.lookup).toBeDefined();
+      expect(endpoints.lookup).toBe('/api/v1/lookup');
     });
 
     it('should have suggestions endpoint', () => {
-      expect(API_CONFIG.endpoints.suggestions).toBeDefined();
-      expect(API_CONFIG.endpoints.suggestions).toBe('/api/v1/lookup/suggestions');
+      expect(endpoints.suggestions).toBeDefined();
+      expect(endpoints.suggestions).toBe('/api/v1/lookup/suggestions');
     });
 
     it('should have login endpoint', () => {
-      expect(API_CONFIG.endpoints.login).toBeDefined();
-      expect(API_CONFIG.endpoints.login).toBe('/api/v1/admin/auth/login');
+      expect(endpoints.login).toBeDefined();
+      expect(endpoints.login).toBe('/api/v1/admin/auth/login');
     });
 
     it('should have refresh endpoint', () => {
-      expect(API_CONFIG.endpoints.refresh).toBeDefined();
-      expect(API_CONFIG.endpoints.refresh).toBe('/api/v1/admin/auth/refresh');
+      expect(endpoints.refresh).toBeDefined();
+      expect(endpoints.refresh).toBe('/api/v1/admin/auth/refresh');
     });
 
     it('should have logout endpoint', () => {
-      expect(API_CONFIG.endpoints.logout).toBeDefined();
-      expect(API_CONFIG.endpoints.logout).toBe('/api/v1/admin/auth/logout');
+      expect(endpoints.logout).toBeDefined();
+      expect(endpoints.logout).toBe('/api/v1/admin/auth/logout');
     });
 
     it('should have mappings endpoint', () => {
-      expect(API_CONFIG.endpoints.mappings).toBeDefined();
-      expect(API_CONFIG.endpoints.mappings).toBe('/api/v1/admin/mappings');
+      expect(endpoints.mappings).toBeDefined();
+      expect(endpoints.mappings).toBe('/api/v1/admin/mappings');
     });
 
     it('should have mappingById function', () => {
-      expect(API_CONFIG.endpoints.mappingById).toBeDefined();
-      expect(typeof API_CONFIG.endpoints.mappingById).toBe('function');
+      expect(endpoints.mappingById).toBeDefined();
+      expect(typeof endpoints.mappingById).toBe('function');
     });
 
     it('should generate correct mappingById endpoint', () => {
       const id = '123-456';
-      const endpoint = API_CONFIG.endpoints.mappingById(id);
+      const mappingById = endpoints.mappingById as (value: string) => string;
+      const endpoint = mappingById(id);
 
       expect(endpoint).toBe(`/api/v1/admin/mappings/${id}`);
     });
 
     it('should handle numeric IDs in mappingById', () => {
-      const endpoint = API_CONFIG.endpoints.mappingById('789');
+      const mappingById = endpoints.mappingById as (value: string) => string;
+      const endpoint = mappingById('789');
 
       expect(endpoint).toBe('/api/v1/admin/mappings/789');
     });
 
     it('should have import endpoint', () => {
-      expect(API_CONFIG.endpoints.import).toBeDefined();
-      expect(API_CONFIG.endpoints.import).toBe('/api/v1/admin/import');
+      expect(endpoints.import).toBeDefined();
+      expect(endpoints.import).toBe('/api/v1/admin/import');
     });
 
     it('should have importStatus function', () => {
-      expect(API_CONFIG.endpoints.importStatus).toBeDefined();
-      expect(typeof API_CONFIG.endpoints.importStatus).toBe('function');
+      expect(endpoints.importStatus).toBeDefined();
+      expect(typeof endpoints.importStatus).toBe('function');
     });
 
     it('should generate correct importStatus endpoint', () => {
       const jobId = 'job-123';
-      const endpoint = API_CONFIG.endpoints.importStatus(jobId);
+      const importStatus = endpoints.importStatus as (value: string) => string;
+      const endpoint = importStatus(jobId);
 
       expect(endpoint).toBe(`/api/v1/admin/import/${jobId}`);
     });
 
     it('should have analyticsOverview endpoint', () => {
-      expect(API_CONFIG.endpoints.analyticsOverview).toBeDefined();
-      expect(API_CONFIG.endpoints.analyticsOverview).toBe('/api/v1/admin/analytics/overview');
+      expect(endpoints.analyticsOverview).toBeDefined();
+      expect(endpoints.analyticsOverview).toBe('/api/v1/admin/analytics/overview');
     });
 
     it('should have analyticsTopSearches endpoint', () => {
-      expect(API_CONFIG.endpoints.analyticsTopSearches).toBeDefined();
-      expect(API_CONFIG.endpoints.analyticsTopSearches).toBe(
-        '/api/v1/admin/analytics/top-searches'
-      );
+      expect(endpoints.analyticsTopSearches).toBeDefined();
+      expect(endpoints.analyticsTopSearches).toBe('/api/v1/admin/analytics/top-searches');
     });
 
     it('should be readonly', () => {
@@ -383,19 +386,19 @@ describe('API Configuration', () => {
     });
 
     it('should check endpoints start with /api/', () => {
-      const endpoints = [
-        API_CONFIG.endpoints.lookup,
-        API_CONFIG.endpoints.suggestions,
-        API_CONFIG.endpoints.login,
-        API_CONFIG.endpoints.refresh,
-        API_CONFIG.endpoints.logout,
-        API_CONFIG.endpoints.mappings,
-        API_CONFIG.endpoints.import,
-        API_CONFIG.endpoints.analyticsOverview,
-        API_CONFIG.endpoints.analyticsTopSearches
+      const endpointStrings = [
+        endpoints.lookup as string,
+        endpoints.suggestions as string,
+        endpoints.login as string,
+        endpoints.refresh as string,
+        endpoints.logout as string,
+        endpoints.mappings as string,
+        endpoints.import as string,
+        endpoints.analyticsOverview as string,
+        endpoints.analyticsTopSearches as string
       ];
 
-      endpoints.forEach(endpoint => {
+      endpointStrings.forEach(endpoint => {
         expect(endpoint).toMatch(/^\/api\//);
       });
     });
