@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { I18nextProvider } from 'react-i18next';
 import { ThemeToggle } from '../ThemeToggle';
 import { ThemeProvider } from '@/lib/theme';
@@ -9,7 +9,7 @@ const i18nForTests = i18next.cloneInstance();
 
 beforeAll(async () => {
   if (!i18nForTests.isInitialized) {
-    await new Promise((resolve) => {
+    await new Promise(resolve => {
       i18nForTests.on('initialized', () => resolve(null));
     });
   }
@@ -54,7 +54,9 @@ describe('ThemeToggle Component', () => {
     it('should display correct aria-label in English', async () => {
       renderWithProviders(<ThemeToggle />);
 
-      await i18nForTests.changeLanguage('en');
+      await act(async () => {
+        await i18nForTests.changeLanguage('en');
+      });
 
       await waitFor(() => {
         const button = screen.getByRole('button');
@@ -66,7 +68,9 @@ describe('ThemeToggle Component', () => {
     it('should display correct aria-label in Spanish', async () => {
       renderWithProviders(<ThemeToggle />);
 
-      await i18nForTests.changeLanguage('es');
+      await act(async () => {
+        await i18nForTests.changeLanguage('es');
+      });
 
       await waitFor(() => {
         const button = screen.getByRole('button');
@@ -110,7 +114,9 @@ describe('ThemeToggle Component', () => {
 
       expect(button).toHaveAttribute('aria-label', 'Design ändern');
 
-      await i18nForTests.changeLanguage('en');
+      await act(async () => {
+        await i18nForTests.changeLanguage('en');
+      });
 
       await waitFor(() => {
         expect(button).toHaveAttribute('aria-label', 'Toggle Theme');
