@@ -1,4 +1,5 @@
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import { act } from 'react';
 import type { ReactNode } from 'react';
 import { AuthProvider, useAuth } from '../AuthContext';
 import { authStorage } from '../authStorage';

@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { act } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { ThemeToggle } from '../ThemeToggle';
 import { ThemeProvider } from '@/lib/theme';
