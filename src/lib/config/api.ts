@@ -7,8 +7,22 @@ export const API_CONFIG = {
   baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
   timeout: 10000, // 10 seconds
   endpoints: {
+    // Public lookup
     lookup: '/api/v1/lookup',
-    suggestions: '/api/v1/lookup/suggestions'
+    suggestions: '/api/v1/lookup/suggestions',
+    // Auth
+    login: '/api/v1/admin/auth/login',
+    refresh: '/api/v1/admin/auth/refresh',
+    logout: '/api/v1/admin/auth/logout',
+    // Admin mappings
+    mappings: '/api/v1/admin/mappings',
+    mappingById: (id: string) => `/api/v1/admin/mappings/${id}`,
+    // Admin import
+    import: '/api/v1/admin/import',
+    importStatus: (jobId: string) => `/api/v1/admin/import/${jobId}`,
+    // Admin analytics
+    analyticsOverview: '/api/v1/admin/analytics/overview',
+    analyticsTopSearches: '/api/v1/admin/analytics/top-searches'
   }
 } as const;
 
