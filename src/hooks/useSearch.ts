@@ -178,11 +178,6 @@ export function useSearch() {
           return;
         }
 
-        // Debug: Log the actual error
-        if (process.env.NODE_ENV === 'development') {
-          console.error('Search error:', error);
-        }
-
         setState({
           data: null,
           error: t(ERROR_MESSAGE_KEYS[ErrorCode.NETWORK_ERROR]),

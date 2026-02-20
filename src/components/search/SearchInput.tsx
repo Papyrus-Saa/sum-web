@@ -31,7 +31,7 @@ export function SearchInput({ onSearch, loading = false, disabled = false }: Sea
             onChange={e => setQuery(e.target.value)}
             disabled={disabled || loading}
             placeholder={t('searchPlaceholder')}
-            className="w-full px-4 py-2.5 text-base border border-border-l dark:border-border-d rounded bg-card-l dark:bg-card-d text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-secondary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            className="w-full px-4 py-2.5 text-base border border-border-l dark:border-border-d rounded bg-card-l dark:bg-card-d text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-secondary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label={t('searchInputLabel')}
           />
           {loading && (
@@ -44,12 +44,12 @@ export function SearchInput({ onSearch, loading = false, disabled = false }: Sea
         <button
           type="submit"
           disabled={disabled || loading || !query.trim()}
-          className="px-6 py-2.5 text-base font-medium text-white bg-primary hover:bg-primary/90 rounded disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-200"
+          className="px-6 py-2.5 text-base font-medium text-white bg-secondary hover:bg-secondary/90 rounded disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-secondary/50 cursor-pointer"
         >
           {loading ? t('searching') : t('searchButton')}
         </button>
 
-        <p className="text-xs text-center mt-1">{t('searchHint')}</p>
+        <p className="text-xs text-center mt-1 bg-card-l dark:bg-card-d">{t('searchHint')}</p>
       </div>
     </form>
   );
