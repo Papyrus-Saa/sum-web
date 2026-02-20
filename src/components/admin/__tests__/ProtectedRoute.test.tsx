@@ -15,7 +15,10 @@ jest.mock('next/navigation', () => ({
 const mockUseAuth = useAuth as jest.MockedFunction<typeof useAuth>;
 const mockUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
-type MockRouter = Pick<AppRouterInstance, 'push' | 'prefetch' | 'back' | 'forward' | 'refresh'>;
+type MockRouter = Pick<
+  AppRouterInstance,
+  'push' | 'prefetch' | 'back' | 'forward' | 'refresh' | 'replace'
+>;
 
 describe('ProtectedRoute', () => {
   const mockRouter = {
@@ -23,7 +26,8 @@ describe('ProtectedRoute', () => {
     prefetch: jest.fn(),
     back: jest.fn(),
     forward: jest.fn(),
-    refresh: jest.fn()
+    refresh: jest.fn(),
+    replace: jest.fn()
   };
 
   const mockAuthState = {
