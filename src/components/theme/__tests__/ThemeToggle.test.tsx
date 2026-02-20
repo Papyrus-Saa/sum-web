@@ -24,8 +24,10 @@ describe('ThemeToggle Component', () => {
     );
   };
 
-  beforeEach(() => {
-    i18nForTests.changeLanguage('de');
+  beforeEach(async () => {
+    await act(async () => {
+      await i18nForTests.changeLanguage('de');
+    });
   });
 
   describe('Rendering', () => {
