@@ -379,7 +379,7 @@ describe('Error Codes Configuration', () => {
     it('should support accessing all error codes without errors', () => {
       expect(() => {
         (Object.values(ErrorCode) as ErrorCode[]).forEach(code => {
-          const _key = ERROR_MESSAGE_KEYS[code];
+          void ERROR_MESSAGE_KEYS[code];
         });
       }).not.toThrow();
     });
