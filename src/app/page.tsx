@@ -20,10 +20,10 @@ export default function Home(): React.ReactElement {
   const title = !mounted || !ready ? DEFAULT_TRANSLATIONS.mainTitle : (t('mainTitle') as string);
 
   return (
-    <div className="min-h-[calc(100vh-200px)] py-8">
+    <div className="min-h-[calc(100vh-200px)] py-8 lg:px-20">
       <main className="flex flex-col items-center justify-start px-4">
         {/* Title */}
-        <h1 className="font-semibold text-center px-1 text-lg sm:text-xl md:text-2xl max-w-2xl mb-8">
+        <h1 className="font-semibold text-center px-1 text-lg sm:text-xl md:text-2xl max-w-2xl mb-20">
           {title}
         </h1>
 

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Josefin_Sans } from 'next/font/google';
 import { RootLayoutClient } from './RootLayoutClient';
 import './globals.css';
+import Header from '@/components/header/Header';
 
 const josefinSans = Josefin_Sans({
   variable: '--font-josefin-sans',
@@ -17,9 +18,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="de" suppressHydrationWarning>
       <body
-        className={`${josefinSans.variable} [font-family:var(--font-josefin-sans)] antialiased bg-main-l dark:bg-main-d text-main-d dark:text-main-l min-h-screen lg:px-20`}
+        className={`${josefinSans.variable} [font-family:var(--font-josefin-sans)] antialiased bg-main-l dark:bg-main-d text-main-d dark:text-main-l min-h-screen`}
       >
-        <RootLayoutClient>{children}</RootLayoutClient>
+        <RootLayoutClient>
+          <Header />
+          {children}
+        </RootLayoutClient>
       </body>
     </html>
   );

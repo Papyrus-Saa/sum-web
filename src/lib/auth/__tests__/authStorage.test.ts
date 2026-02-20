@@ -4,7 +4,7 @@ describe('authStorage', () => {
   // Mock user data for testing
   const mockUser = {
     id: 'user-123',
-    email: 'test@example.com',
+    email: 'test@example.com'
   };
 
   const mockAccessToken = 'mock-access-token-jwt';
@@ -34,7 +34,7 @@ describe('authStorage', () => {
     it('should handle JSON serialization correctly', () => {
       const complexUser = {
         id: 'user-456',
-        email: 'complex@test.com',
+        email: 'complex@test.com'
       };
 
       authStorage.setAuth(mockAccessToken, mockRefreshToken, complexUser);
@@ -59,7 +59,7 @@ describe('authStorage', () => {
 
     it('should handle localStorage errors gracefully', () => {
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-      
+
       // Mock localStorage.setItem to throw error
       jest.spyOn(Storage.prototype, 'setItem').mockImplementationOnce(() => {
         throw new Error('QuotaExceededError');
@@ -68,10 +68,7 @@ describe('authStorage', () => {
       // Should not throw, should log error
       authStorage.setAuth(mockAccessToken, mockRefreshToken, mockUser);
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Failed to save auth data:',
-        expect.any(Error)
-      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to save auth data:', expect.any(Error));
 
       consoleErrorSpy.mockRestore();
     });
@@ -238,7 +235,7 @@ describe('authStorage', () => {
 
     it('should handle localStorage errors gracefully', () => {
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-      
+
       // Mock localStorage.removeItem to throw error
       jest.spyOn(Storage.prototype, 'removeItem').mockImplementationOnce(() => {
         throw new Error('localStorage not available');
@@ -247,10 +244,7 @@ describe('authStorage', () => {
       // Should not throw, should log error
       authStorage.clearAuth();
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Failed to clear auth data:',
-        expect.any(Error)
-      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to clear auth data:', expect.any(Error));
 
       consoleErrorSpy.mockRestore();
     });
@@ -259,7 +253,7 @@ describe('authStorage', () => {
       // Set auth data
       localStorage.setItem('tirecode_access_token', mockAccessToken);
       localStorage.setItem('tirecode_user', JSON.stringify(mockUser));
-      
+
       // Set other unrelated data
       localStorage.setItem('other_app_data', 'should-remain');
 
@@ -269,7 +263,7 @@ describe('authStorage', () => {
       // Auth data should be gone
       expect(localStorage.getItem('tirecode_access_token')).toBeNull();
       expect(localStorage.getItem('tirecode_user')).toBeNull();
-      
+
       // Other data should remain
       expect(localStorage.getItem('other_app_data')).toBe('should-remain');
     });

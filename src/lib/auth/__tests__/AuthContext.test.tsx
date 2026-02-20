@@ -177,11 +177,10 @@ describe('AuthContext', () => {
 
       await act(async () => {
         loginBtn.click();
+        await jest.runOnlyPendingTimersAsync();
       });
 
-      await waitFor(() => {
-        expect(authStorage.setAuth).toHaveBeenCalled();
-      });
+      expect(authStorage.setAuth).toHaveBeenCalled();
 
       const expectedRefreshTime = mockAuthResponse.expiresIn * 0.9 * 1000;
       expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), expectedRefreshTime);

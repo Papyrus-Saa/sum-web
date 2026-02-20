@@ -40,16 +40,15 @@ export function SearchInput({ onSearch, loading = false, disabled = false }: Sea
             </div>
           )}
         </div>
-
+        <p className="text-center mt-1 ">{t('searchHint')}</p>
+        <p className=""></p>
         <button
           type="submit"
           disabled={disabled || loading || !query.trim()}
-          className="px-6 py-2.5 text-base font-medium text-white bg-secondary hover:bg-secondary/90 rounded disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-secondary/50 cursor-pointer"
+          className="px-6 py-2.5 text-base font-medium text-white bg-secondary hover:bg-secondary/90 rounded disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-secondary/50 cursor-pointer"
         >
           {loading ? t('searching') : t('searchButton')}
         </button>
-
-        <p className="text-xs text-center mt-1 bg-card-l dark:bg-card-d">{t('searchHint')}</p>
       </div>
     </form>
   );
