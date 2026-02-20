@@ -250,14 +250,19 @@ describe('Error Codes Configuration', () => {
     });
 
     it('should support error code comparison', () => {
-      const errorCode = ErrorCode.TIRE_SIZE_NOT_FOUND;
+      const codes: ErrorCode[] = [ErrorCode.TIRE_SIZE_NOT_FOUND, ErrorCode.TIRE_CODE_NOT_FOUND];
 
-      expect(errorCode === ErrorCode.TIRE_SIZE_NOT_FOUND).toBe(true);
-      expect(errorCode === ErrorCode.TIRE_CODE_NOT_FOUND).toBe(false);
+      expect(codes[0] === ErrorCode.TIRE_SIZE_NOT_FOUND).toBe(true);
+      expect(codes[1] !== codes[0]).toBe(true);
     });
 
     it('should support error code in switch statements', () => {
-      const errorCode = ErrorCode.INVALID_TIRE_SIZE_FORMAT;
+      const codes: ErrorCode[] = [
+        ErrorCode.INVALID_TIRE_SIZE_FORMAT,
+        ErrorCode.MISSING_REQUIRED_FIELDS
+      ];
+
+      const errorCode = codes[0];
       let result = '';
 
       switch (errorCode) {
@@ -285,7 +290,7 @@ describe('Error Codes Configuration', () => {
     });
 
     it('should map all tire errors to error_tire_ prefixed keys', () => {
-      const tireErrors = [
+      const tireErrors: ErrorCode[] = [
         ErrorCode.TIRE_CODE_NOT_FOUND,
         ErrorCode.TIRE_SIZE_NOT_FOUND,
         ErrorCode.TIRE_SIZE_ALREADY_EXISTS,
@@ -299,7 +304,7 @@ describe('Error Codes Configuration', () => {
     });
 
     it('should map validation errors to error_invalid_ or error_missing_', () => {
-      const validationErrors = [
+      const validationErrors: ErrorCode[] = [
         ErrorCode.INVALID_TIRE_SIZE_FORMAT,
         ErrorCode.INVALID_TIRE_CODE_FORMAT,
         ErrorCode.MISSING_REQUIRED_FIELDS
@@ -312,7 +317,7 @@ describe('Error Codes Configuration', () => {
     });
 
     it('should map general errors to appropriate prefixes', () => {
-      const generalErrors = [
+      const generalErrors: Array<[ErrorCode, string]> = [
         [ErrorCode.INTERNAL_SERVER_ERROR, 'error_internal'],
         [ErrorCode.NETWORK_ERROR, 'error_network'],
         [ErrorCode.UNKNOWN_ERROR, 'error_unknown']
@@ -373,8 +378,8 @@ describe('Error Codes Configuration', () => {
 
     it('should support accessing all error codes without errors', () => {
       expect(() => {
-        Object.values(ErrorCode).forEach(code => {
-          const _key = ERROR_MESSAGE_KEYS[code as ErrorCode];
+        (Object.values(ErrorCode) as ErrorCode[]).forEach(code => {
+          const _key = ERROR_MESSAGE_KEYS[code];
         });
       }).not.toThrow();
     });
@@ -412,9 +417,9 @@ describe('Error Codes Configuration', () => {
     });
 
     it('should support error filtering by category', () => {
-      const allErrors = Object.values(ErrorCode);
+      const allErrors = Object.values(ErrorCode) as ErrorCode[];
       const validationErrors = allErrors.filter(
-        code => code.includes('INVALID') || code.includes('MISSING')
+        code => (code as string).includes('INVALID') || (code as string).includes('MISSING')
       );
 
       expect(validationErrors).toContain(ErrorCode.INVALID_TIRE_SIZE_FORMAT);
@@ -423,7 +428,7 @@ describe('Error Codes Configuration', () => {
     });
 
     it('should support retrieving all error codes programmatically', () => {
-      const allErrors = Object.values(ErrorCode);
+      const allErrors = Object.values(ErrorCode) as ErrorCode[];
       const allKeys = Object.values(ERROR_MESSAGE_KEYS);
 
       expect(allErrors).toHaveLength(allKeys.length);
