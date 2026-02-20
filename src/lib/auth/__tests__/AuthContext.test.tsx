@@ -1,4 +1,5 @@
 import { render, screen, waitFor, act } from '@testing-library/react';
+import type { ReactNode } from 'react';
 import { AuthProvider, useAuth } from '../AuthContext';
 import { authStorage } from '../authStorage';
 
@@ -6,23 +7,26 @@ import { authStorage } from '../authStorage';
 jest.mock('../authStorage');
 
 // Mock fetch globally
-global.fetch = jest.fn(async () => ({
-  ok: true,
-  status: 200,
-  json: async () => ({}),
-} as Response));
+global.fetch = jest.fn(
+  async () =>
+    ({
+      ok: true,
+      status: 200,
+      json: async () => ({})
+    }) as Response
+);
 
 // Mock data
 const mockUser = {
   id: 'user-123',
-  email: 'admin@example.com',
+  email: 'admin@example.com'
 };
 
 const mockAuthResponse = {
   accessToken: 'access-token-jwt',
   refreshToken: 'refresh-token-jwt',
   expiresIn: 3600,
-  user: mockUser,
+  user: mockUser
 };
 
 // Test component
@@ -34,7 +38,10 @@ function TestComponent() {
         <div data-testid="user">{auth.user?.email || 'not-authenticated'}</div>
         <div data-testid="isAuthenticated">{auth.isAuthenticated.toString()}</div>
         <div data-testid="isLoading">{auth.isLoading.toString()}</div>
-        <button data-testid="login-btn" onClick={() => auth.login({ email: 'admin@example.com', password: 'password' })}>
+        <button
+          data-testid="login-btn"
+          onClick={() => auth.login({ email: 'admin@example.com', password: 'password' })}
+        >
           Login
         </button>
         <button data-testid="logout-btn" onClick={() => auth.logout()}>
@@ -48,6 +55,14 @@ function TestComponent() {
   } catch (error) {
     return <div data-testid="error">{(error as Error).message}</div>;
   }
+}
+
+async function renderWithProvider(children: ReactNode = <TestComponent />) {
+  render(<AuthProvider>{children}</AuthProvider>);
+
+  await waitFor(() => {
+    expect(screen.getByTestId('isLoading')).toHaveTextContent('false');
+  });
 }
 
 describe('AuthContext', () => {
@@ -69,45 +84,31 @@ describe('AuthContext', () => {
   });
 
   describe('AuthProvider', () => {
-    it('should render children', () => {
-      render(
-        <AuthProvider>
+    it('should render children', async () => {
+      await renderWithProvider(
+        <>
           <div data-testid="child">Test Child</div>
-        </AuthProvider>
+          <TestComponent />
+        </>
       );
       expect(screen.getByTestId('child')).toBeInTheDocument();
     });
 
-    it('should provide auth context to children', () => {
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+    it('should provide auth context to children', async () => {
+      await renderWithProvider();
       expect(screen.getByTestId('user')).toBeInTheDocument();
       expect(screen.getByTestId('isAuthenticated')).toBeInTheDocument();
     });
 
     it('should initialize with isLoading transitioning to false', async () => {
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
-      await waitFor(() => {
-        expect(screen.getByTestId('isLoading')).toHaveTextContent('false');
-      });
+      await renderWithProvider();
     });
 
     it('should set user from authStorage on mount', async () => {
       const storedUser = { id: 'stored-user', email: 'stored@example.com' };
       (authStorage.getUser as jest.Mock).mockReturnValue(storedUser);
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       await waitFor(() => {
         expect(screen.getByTestId('user')).toHaveTextContent('stored@example.com');
@@ -117,11 +118,7 @@ describe('AuthContext', () => {
     it('should initialize without stored user', async () => {
       (authStorage.getUser as jest.Mock).mockReturnValue(null);
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       await waitFor(() => {
         expect(screen.getByTestId('isAuthenticated')).toHaveTextContent('false');
@@ -130,12 +127,8 @@ describe('AuthContext', () => {
   });
 
   describe('useAuth hook', () => {
-    it('should return auth context object', () => {
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+    it('should return auth context object', async () => {
+      await renderWithProvider();
       expect(screen.getByTestId('isAuthenticated')).toBeInTheDocument();
       expect(screen.getByTestId('user')).toBeInTheDocument();
     });
@@ -146,14 +139,10 @@ describe('AuthContext', () => {
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
         status: 200,
-        json: async () => mockAuthResponse,
+        json: async () => mockAuthResponse
       } as Response);
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       const loginBtn = screen.getByTestId('login-btn');
 
@@ -173,19 +162,16 @@ describe('AuthContext', () => {
     });
 
     it('should schedule token refresh after login', async () => {
+      jest.useFakeTimers();
       const setTimeoutSpy = jest.spyOn(global, 'setTimeout');
 
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
         status: 200,
-        json: async () => mockAuthResponse,
+        json: async () => mockAuthResponse
       } as Response);
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       const loginBtn = screen.getByTestId('login-btn');
 
@@ -197,10 +183,11 @@ describe('AuthContext', () => {
         expect(authStorage.setAuth).toHaveBeenCalled();
       });
 
-      const expectedRefreshTime = (mockAuthResponse.expiresIn * 0.9) * 1000;
+      const expectedRefreshTime = mockAuthResponse.expiresIn * 0.9 * 1000;
       expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), expectedRefreshTime);
 
       setTimeoutSpy.mockRestore();
+      jest.useRealTimers();
     });
   });
 
@@ -208,17 +195,13 @@ describe('AuthContext', () => {
     it('should logout successfully', async () => {
       (authStorage.getAccessToken as jest.Mock).mockReturnValue('access-token');
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       const logoutBtn = screen.getByTestId('logout-btn');
 
       await act(async () => {
         logoutBtn.click();
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 200));
       });
 
       expect(authStorage.clearAuth).toHaveBeenCalled();
@@ -228,11 +211,7 @@ describe('AuthContext', () => {
       (authStorage.getAccessToken as jest.Mock).mockReturnValue('access-token');
       (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       const logoutBtn = screen.getByTestId('logout-btn');
 
@@ -250,11 +229,7 @@ describe('AuthContext', () => {
       (authStorage.getAccessToken as jest.Mock).mockReturnValue(accessToken);
       (global.fetch as jest.Mock).mockResolvedValueOnce({ ok: true } as Response);
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       const logoutBtn = screen.getByTestId('logout-btn');
 
@@ -268,8 +243,8 @@ describe('AuthContext', () => {
           expect.objectContaining({
             method: 'POST',
             headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
+              Authorization: `Bearer ${accessToken}`
+            }
           })
         );
       });
@@ -278,11 +253,7 @@ describe('AuthContext', () => {
     it('should not call logout endpoint if no access token', async () => {
       (authStorage.getAccessToken as jest.Mock).mockReturnValue(null);
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       const logoutBtn = screen.getByTestId('logout-btn');
 
@@ -301,21 +272,17 @@ describe('AuthContext', () => {
       const newAccessToken = 'new-access-token';
       const newAuthResponse = {
         ...mockAuthResponse,
-        accessToken: newAccessToken,
+        accessToken: newAccessToken
       };
 
       (authStorage.getRefreshToken as jest.Mock).mockReturnValue(mockAuthResponse.refreshToken);
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
         status: 200,
-        json: async () => newAuthResponse,
+        json: async () => newAuthResponse
       } as Response);
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       const refreshBtn = screen.getByTestId('refresh-btn');
 
@@ -335,11 +302,7 @@ describe('AuthContext', () => {
     it('should return false if no refresh token', async () => {
       (authStorage.getRefreshToken as jest.Mock).mockReturnValue(null);
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       const refreshBtn = screen.getByTestId('refresh-btn');
 
@@ -355,14 +318,10 @@ describe('AuthContext', () => {
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: false,
         status: 401,
-        json: async () => ({}),
+        json: async () => ({})
       } as Response);
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       const refreshBtn = screen.getByTestId('refresh-btn');
 
@@ -379,11 +338,7 @@ describe('AuthContext', () => {
       (authStorage.getRefreshToken as jest.Mock).mockReturnValue(mockAuthResponse.refreshToken);
       (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       const refreshBtn = screen.getByTestId('refresh-btn');
 
@@ -395,20 +350,17 @@ describe('AuthContext', () => {
     });
 
     it('should schedule next token refresh', async () => {
+      jest.useFakeTimers();
       const setTimeoutSpy = jest.spyOn(global, 'setTimeout');
 
       (authStorage.getRefreshToken as jest.Mock).mockReturnValue(mockAuthResponse.refreshToken);
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
         status: 200,
-        json: async () => mockAuthResponse,
+        json: async () => mockAuthResponse
       } as Response);
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       const refreshBtn = screen.getByTestId('refresh-btn');
 
@@ -416,10 +368,11 @@ describe('AuthContext', () => {
         refreshBtn.click();
       });
 
-      const expectedRefreshTime = (mockAuthResponse.expiresIn * 0.9) * 1000;
+      const expectedRefreshTime = mockAuthResponse.expiresIn * 0.9 * 1000;
       expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), expectedRefreshTime);
 
       setTimeoutSpy.mockRestore();
+      jest.useRealTimers();
     });
   });
 
@@ -430,14 +383,10 @@ describe('AuthContext', () => {
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
         status: 200,
-        json: async () => mockAuthResponse,
+        json: async () => mockAuthResponse
       } as Response);
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       await waitFor(() => {
         expect(global.fetch).toHaveBeenCalledWith(
@@ -450,11 +399,7 @@ describe('AuthContext', () => {
     it('should not call refreshToken when no stored user', async () => {
       (authStorage.getUser as jest.Mock).mockReturnValue(null);
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       await waitFor(() => {
         expect(screen.getByTestId('isLoading')).toHaveTextContent('false');
@@ -471,11 +416,7 @@ describe('AuthContext', () => {
     it('should be true when user exists', async () => {
       (authStorage.getUser as jest.Mock).mockReturnValue(mockUser);
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       await waitFor(() => {
         expect(screen.getByTestId('isAuthenticated')).toHaveTextContent('true');
@@ -485,11 +426,7 @@ describe('AuthContext', () => {
     it('should be false when user is null', async () => {
       (authStorage.getUser as jest.Mock).mockReturnValue(null);
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       await waitFor(() => {
         expect(screen.getByTestId('isAuthenticated')).toHaveTextContent('false');
@@ -502,14 +439,10 @@ describe('AuthContext', () => {
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
         status: 200,
-        json: async () => mockAuthResponse,
+        json: async () => mockAuthResponse
       } as Response);
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       const loginBtn = screen.getByTestId('login-btn');
 
@@ -530,14 +463,10 @@ describe('AuthContext', () => {
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
         status: 200,
-        json: async () => mockAuthResponse,
+        json: async () => mockAuthResponse
       } as Response);
 
-      render(
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      );
+      await renderWithProvider();
 
       const refreshBtn = screen.getByTestId('refresh-btn');
 
@@ -551,8 +480,8 @@ describe('AuthContext', () => {
           expect.objectContaining({
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
-            },
+              'Content-Type': 'application/json'
+            }
           })
         );
       });
