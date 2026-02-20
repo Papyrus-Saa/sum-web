@@ -57,10 +57,10 @@ describe('Home Page', () => {
       expect(heading).toHaveClass('font-semibold');
       expect(heading).toHaveClass('text-center');
       expect(heading).toHaveClass('px-1');
+      expect(heading).toHaveClass('text-lg');
       expect(heading).toHaveClass('sm:text-xl');
       expect(heading).toHaveClass('md:text-2xl');
-      expect(heading).toHaveClass('lg:text-3xl');
-      expect(heading).toHaveClass('lg:max-w-2xl');
+      expect(heading).toHaveClass('max-w-2xl');
     });
   });
 

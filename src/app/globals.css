@@ -20,9 +20,29 @@
   --color-hover-l: #dedede;
   --color-hover-d: #3b3b3f;
 
+  --color-placeholder-l: #9E9E9E;
+  --color-placeholder-d: #666666;
+
   --color-card-l: #f5f5f5;
   --color-card-d: #1c1c1e;
 
-  --color-border-l: #ebebeb;
-  --color-border-d: #616161;
+  --color-border-l: #A3A3C7;
+  --color-border-d: #38384F;
+  
+  --color-delate: #ff0000;
+
+  --color-error-l: #ffe3e3;
+  --color-error-d: #6b1f1f;
+  --color-error-text-l: #b42318;
+  --color-error-text-d: #fca5a5;
+  --color-error-border-l: #fca5a5;
+  --color-error-border-d: #7f1d1d;
+
+  --color-tireMappingAdmin-green: #00E004;
+  --color-tireMappingAdmin-purple: #8A00E0;
+  --color-tireMappingAdmin-orange: #E08E00;
+
+  --color-tireMappingAdmin-green-hover: #007002;
+  --color-tireMappingAdmin-purple-hover: #500082;
+  --color-tireMappingAdmin-orange-hover: #AB6B00;
 }
