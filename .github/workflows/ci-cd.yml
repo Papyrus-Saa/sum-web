@@ -7,7 +7,7 @@ on:
     branches: [main, develop]
 
 jobs:
-  # JOB 1: Instalación única y compartida
+
   setup:
     name: 📦 Setup & Cache
     runs-on: ubuntu-latest
@@ -19,14 +19,14 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
-      # Guardamos node_modules para los siguientes jobs
+
       - name: Cache node_modules
         uses: actions/cache@v4
         with:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
-  # JOBS EN PARALELO (Todos dependen de setup)
+
   validation:
     name: ✅ Validation (Lint, Format, Type)
     needs: setup
