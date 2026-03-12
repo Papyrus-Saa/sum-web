@@ -4,7 +4,7 @@ import LanguageSwitcher from '../language-switcher/LanguageSwitcher';
 
 const Header = () => {
   return (
-    <header className="flex justify-between items-center p-2 lg:p-6 mb-12 border-b-2 border-border-l dark:border-border-d">
+    <header className="flex justify-between items-center h-(--header-height) px-2 lg:px-6  border-b border-secondary">
       <div className="">
         <BrandTitle
           title="Sum"

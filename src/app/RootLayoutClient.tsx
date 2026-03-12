@@ -12,9 +12,7 @@ export function RootLayoutClient({ children }: RootLayoutClientProps) {
   return (
     <ThemeProvider>
       <I18nProvider>
-        <AuthProvider>
-          <div className="">{children}</div>
-        </AuthProvider>
+        <AuthProvider>{children}</AuthProvider>
       </I18nProvider>
     </ThemeProvider>
   );

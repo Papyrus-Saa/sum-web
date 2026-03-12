@@ -4,15 +4,15 @@
 
 :root {
   /* --background: #ffffff;
-  --foreground: #141414; */
+  --foreground: #121029; */
 }
 
 @theme {
   --color-main-l: #fafafa;
-  --color-main-d: #0e0e0f;
+  --color-main-d: #232329;
 
-  --color-primary: #1f7080;
-  --color-secondary: #c20000;
+  --color-primary: #74756e;
+  --color-secondary: #92a61b;
 
   /* --color-primary: #076943;
 --color-secondary: #69072D; */
@@ -42,7 +42,16 @@
   --color-tireMappingAdmin-purple: #8a00e0;
   --color-tireMappingAdmin-orange: #e08e00;
 
+  --color-mapping-created: #e08e00;
+  --color-mapping-updated: #e08e00;
+  --color-mapping-deleted: #e08e00;
+
   --color-tireMappingAdmin-green-hover: #007002;
   --color-tireMappingAdmin-purple-hover: #500082;
   --color-tireMappingAdmin-orange-hover: #ab6b00;
+}
+
+.poem {
+  scrollbar-color: #9e9e9e gray;
+  scrollbar-width: thin;
 }
