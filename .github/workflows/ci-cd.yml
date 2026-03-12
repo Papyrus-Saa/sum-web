@@ -31,16 +31,18 @@ jobs:
     name: ✅ Validation (Lint, Format, Type)
     needs: setup
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        command: ["npm run lint", "npx prettier --check .", "npx tsc --noEmit"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
         with:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-      - run: ${{ matrix.command }}
+      - name: Lint
+        run: npm run lint
+      - name: Prettier check (block merge if not formatted)
+        run: npx prettier --check .
+      - name: Typecheck
+        run: npx tsc --noEmit
 
   security:
     name: 🛡️ Security Scan
