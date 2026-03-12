@@ -7,7 +7,6 @@ on:
     branches: [main, develop]
 
 jobs:
-
   setup:
     name: 📦 Setup & Cache
     runs-on: ubuntu-latest
@@ -25,7 +24,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-
 
   validation:
     name: ✅ Validation (Lint, Format, Type)
