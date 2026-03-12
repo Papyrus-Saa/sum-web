@@ -2,10 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { API_CONFIG } from '@/lib/config/api';
-import type { LookupMappingsResponse, LookupMappingResponse } from '@/types/api';
 
 interface UseLookupMappingsState {
-  data: LookupMappingResponse[];
+  data: MappingResponse[];
   loading: boolean;
   error: string | null;
   query: string;
