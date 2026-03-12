@@ -2,30 +2,76 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useMappings } from '@/hooks/useMappings';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 
 export default function MappingsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { mappings, isLoading, error, fetchMappings, deleteMapping } = useMappings();
   const [searchQuery, setSearchQuery] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [confirmTarget, setConfirmTarget] = useState<{ id: string; codePublic: string } | null>(
+    null
+  );
+  const [flashMessage, setFlashMessage] = useState<{
+    type: 'success' | 'error';
+    text: string;
+    status?: 'created' | 'updated' | 'deleted';
+  } | null>(null);
 
   useEffect(() => {
     fetchMappings();
   }, [fetchMappings]);
 
+  useEffect(() => {
+    const status = searchParams.get('status');
+    const message = searchParams.get('message');
+    if (!status || !message) return;
+
+    // Evitar setState directo: usar microtask para evitar render en cascada
+    Promise.resolve().then(() => {
+      if (status === 'created' || status === 'updated') {
+        setFlashMessage({ type: 'success', text: message, status });
+      } else {
+        setFlashMessage({ type: 'success', text: message });
+      }
+      router.replace('/admin/mappings');
+    });
+  }, [router, searchParams]);
+
+  useEffect(() => {
+    if (!flashMessage) return;
+    const timer = setTimeout(() => setFlashMessage(null), 4500);
+    return () => clearTimeout(timer);
+  }, [flashMessage]);
+
   const handleDelete = async (id: string, codePublic: string) => {
-    if (!confirm(`Are you sure you want to delete mapping for code "${codePublic}"?`)) {
+    setConfirmTarget({ id, codePublic });
+  };
+
+  const confirmDelete = async () => {
+    if (!confirmTarget) return;
+    const { id } = confirmTarget;
+    setDeletingId(id);
+    const result = await deleteMapping(id);
+    setDeletingId(null);
+    setConfirmTarget(null);
+
+    if (!result.success) {
+      setFlashMessage({
+        type: 'error',
+        text: result.error || 'Failed to delete mapping. Please try again.'
+      });
       return;
     }
 
-    setDeletingId(id);
-    const success = await deleteMapping(id);
-    setDeletingId(null);
-
-    if (!success) {
-      alert('Failed to delete mapping. Please try again.');
-    }
+    setFlashMessage({
+      type: 'success',
+      text: result.message || 'Mapping deleted successfully',
+      status: 'deleted'
+    });
   };
 
   const filteredMappings = mappings.filter(mapping => {
@@ -155,6 +201,56 @@ export default function MappingsPage() {
       {!isLoading && filteredMappings.length > 0 && (
         <div className="mt-4 text-sm bg-card-l dark:bg-card-d rounded p-2">
           Showing {filteredMappings.length} of {mappings.length} mappings
+        </div>
+      )}
+
+      {flashMessage && (
+        <div className="mt-4 p-4 rounded border bg-card-l dark:bg-card-d">
+          <div
+            className={`text-sm ${
+              flashMessage.type === 'success'
+                ? flashMessage.status === 'created'
+                  ? 'text-mapping-created'
+                  : flashMessage.status === 'updated'
+                    ? 'text-mapping-updated'
+                    : flashMessage.status === 'deleted'
+                      ? 'text-mapping-deleted'
+                      : 'text-mapping-created'
+                : 'text-error-text-l dark:text-error-text-d'
+            }`}
+          >
+            {flashMessage.text}
+          </div>
+        </div>
+      )}
+
+      {confirmTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-sm rounded-lg bg-card-l dark:bg-card-d border border-border-l dark:border-border-d p-5">
+            <h3 className="text-base font-semibold text-primary mb-2">Confirm delete</h3>
+            <p className="text-sm mb-4">
+              Are you sure you want to delete mapping for code &quot;{confirmTarget.codePublic}
+              &quot;
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setConfirmTarget(null)}
+                className="px-4 py-2 text-sm rounded bg-hover-l dark:bg-hover-d"
+                disabled={deletingId === confirmTarget.id}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmDelete}
+                className="px-4 py-2 text-sm rounded text-white bg-delate hover:bg-delate/80 disabled:opacity-50"
+                disabled={deletingId === confirmTarget.id}
+              >
+                {deletingId === confirmTarget.id ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </>

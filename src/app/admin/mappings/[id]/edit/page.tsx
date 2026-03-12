@@ -64,26 +64,28 @@ export default function EditMappingPage({ params }: EditMappingPageProps) {
     setIsSubmitting(true);
 
     try {
+      const normalizedSizeRaw = formData.sizeRaw.trim();
       // Validate size format
       const sizePattern = /^\d{3}\/\d{2}[A-Z]\d{2}$/;
-      if (!sizePattern.test(formData.sizeRaw)) {
+      if (!sizePattern.test(normalizedSizeRaw)) {
         setError('Invalid size format. Expected format: 205/55R16');
         setIsSubmitting(false);
         return;
       }
 
       const requestData = {
-        sizeRaw: formData.sizeRaw,
+        sizeRaw: normalizedSizeRaw,
         ...(formData.loadIndex && { loadIndex: parseInt(formData.loadIndex, 10) }),
         ...(formData.speedIndex && { speedIndex: formData.speedIndex })
       };
 
-      const success = await updateMapping(mappingId, requestData);
+      const result = await updateMapping(mappingId, requestData);
 
-      if (success) {
-        router.push('/admin/mappings');
+      if (result.success) {
+        const successMessage = result.message || 'Mapping updated successfully';
+        router.push(`/admin/mappings?status=updated&message=${encodeURIComponent(successMessage)}`);
       } else {
-        setError('Failed to update mapping. Please try again.');
+        setError(result.error || 'Failed to update mapping. Please try again.');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred');
