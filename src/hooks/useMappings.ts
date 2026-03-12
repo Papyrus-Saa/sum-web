@@ -23,18 +23,14 @@ export function useMappings() {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
-
     setIsLoading(true);
     setError(null);
-
     abortControllerRef.current = new AbortController();
-
     try {
       const token = authStorage.getAccessToken();
       if (!token) {
         throw new Error('No access token found');
       }
-
       const response = await fetch(`${baseUrl}${endpoints.mappings}`, {
         method: 'GET',
         headers: {
@@ -42,19 +38,15 @@ export function useMappings() {
         },
         signal: abortControllerRef.current.signal
       });
-
       if (!response.ok) {
         throw new Error(`Failed to fetch mappings: ${response.status}`);
       }
-
       const data: MappingResponse[] = await response.json();
       setMappings(data);
     } catch (err) {
-      // Ignore abort errors (user initiated)
       if (err instanceof Error && err.name === 'AbortError') {
         return;
       }
-
       const message = err instanceof Error ? err.message : 'Failed to fetch mappings';
       setError(message);
     } finally {
@@ -90,11 +82,11 @@ export function useMappings() {
           };
         }
         const newMapping: MappingResponse = await response.json();
-        setMappings(prev => [newMapping, ...prev]);
+        setMappings((prev: MappingResponse[]) => [newMapping, ...prev]);
         return { success: true, message: 'Mapping created successfully' };
       } catch (err) {
         if (err instanceof Error && err.name === 'AbortError') {
-          return { success: false, error: 'Aborted' };
+          return { success: false, error: 'Request aborted' };
         }
         const message = err instanceof Error ? err.message : 'Failed to create mapping';
         setError(message);
@@ -133,11 +125,13 @@ export function useMappings() {
           };
         }
         const updatedMapping: MappingResponse = await response.json();
-        setMappings(prev => prev.map(m => (m.id === id ? updatedMapping : m)));
+        setMappings((prev: MappingResponse[]) =>
+          prev.map((m: MappingResponse) => (m.id === id ? updatedMapping : m))
+        );
         return { success: true, message: 'Mapping updated successfully' };
       } catch (err) {
         if (err instanceof Error && err.name === 'AbortError') {
-          return { success: false, error: 'Aborted' };
+          return { success: false, error: 'Request aborted' };
         }
         const message = err instanceof Error ? err.message : 'Failed to update mapping';
         setError(message);
@@ -170,11 +164,11 @@ export function useMappings() {
             error: errorData?.error?.message || `Failed to delete mapping: ${response.status}`
           };
         }
-        setMappings(prev => prev.filter(m => m.id !== id));
+        setMappings((prev: MappingResponse[]) => prev.filter((m: MappingResponse) => m.id !== id));
         return { success: true, message: 'Mapping deleted successfully' };
       } catch (err) {
         if (err instanceof Error && err.name === 'AbortError') {
-          return { success: false, error: 'Aborted' };
+          return { success: false, error: 'Request aborted' };
         }
         const message = err instanceof Error ? err.message : 'Failed to delete mapping';
         setError(message);
