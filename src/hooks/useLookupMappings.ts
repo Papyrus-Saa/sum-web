@@ -1,7 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
 import { API_CONFIG } from '@/lib/config/api';
+import type { MappingResponse } from '@/types/api';
 
 interface UseLookupMappingsState {
   data: MappingResponse[];
@@ -37,7 +39,7 @@ export function useLookupMappings() {
     abortControllerRef.current = new AbortController();
 
     try {
-      const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.lookupMappings}`, {
+      const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.mappings}`, {
         method: 'GET',
         signal: abortControllerRef.current.signal
       });
@@ -46,7 +48,7 @@ export function useLookupMappings() {
         throw new Error(`Failed to fetch mappings: ${response.status}`);
       }
 
-      const data = (await response.json()) as LookupMappingsResponse;
+      const data = (await response.json()) as MappingResponse[];
       setState(prev => ({ ...prev, data, loading: false }));
     } catch (err) {
       if (err instanceof Error && err.name === 'AbortError') {
