@@ -8,7 +8,7 @@ on:
 
 jobs:
   setup:
-    name: 📦 Setup & Cache
+    name: 📦 Setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,75 +19,74 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Cache node_modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
-  validation:
-    name: ✅ Validation (Lint, Format, Type)
+  lint:
     needs: setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-      - name: Lint
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci
+      - name: lint
         run: npm run lint
-      - name: Prettier check (block merge if not formatted)
+
+  prettier:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci
+      - name: prettier
         run: npx prettier --check .
-      - name: Typecheck
+
+  typecheck:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci
+      - name: typecheck
         run: npx tsc --noEmit
 
   security:
-    name: 🛡️ Security Scan
+    name: security
     needs: setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
-      - name: TruffleHog (Secrets)
+      - name: TruffleHog
         uses: trufflesecurity/trufflehog@main
-        with:
-          path: ./
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
-          extra_args: --only-verified
-      - name: Trivy (SCA)
+      - name: Trivy
         uses: aquasecurity/trivy-action@0.35.0
         with:
           scan-type: 'fs'
-          exit-code: '1'
-          severity: 'CRITICAL,HIGH'
 
   test:
-    name: 🧪 Unit Tests
+    name: test
     needs: setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-      - name: Run tests with coverage
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci
+      - name: Run tests
         run: npm run test:ci -- --coverage
-      - name: Upload coverage
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
 
+ 
   build:
-    name: 🚀 Production Build
-    needs: [validation, test, security]
+    name: build
+    needs: [lint, prettier, typecheck, security, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci
       - run: npm run build
