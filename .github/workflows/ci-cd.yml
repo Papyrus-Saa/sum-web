@@ -79,7 +79,6 @@ jobs:
         with:
           scan-type: 'fs'
 
-
   lighthouse:
     needs: setup
     runs-on: ubuntu-latest
