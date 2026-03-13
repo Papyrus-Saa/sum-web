@@ -8,5 +8,17 @@ coverage:
   status:
     project:
       default:
-        target: auto
+        target: 80%
         threshold: 1%
+        branches:
+          - main
+    patch:
+      default:
+        target: 80%
+        threshold: 1%
+ignore:
+  - 'node_modules/*'
+  - 'coverage/*'
+  - '**/*.test.ts'
+  - '**/*.test.tsx'
+  - '**/__tests__/*'

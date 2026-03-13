@@ -1,8 +1,6 @@
-"use client";
+'use client';
 
-import { createContext } from "react";
-import type { ThemeContextType } from "./types";
+import { createContext } from 'react';
+import type { ThemeContextType } from './types';
 
-export const ThemeContext = createContext<ThemeContextType | undefined>(
-  undefined
-);
+export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
