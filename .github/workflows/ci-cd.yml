@@ -87,7 +87,7 @@ jobs:
       - name: Audit usage with Lighthouse
         uses: treosh/lighthouse-ci-action@v11
         with:
-          urls: 'http://localhost:3000'
+          urls: 'http://localhost:3001'
           uploadArtifacts: true
 
   quality-gate:
