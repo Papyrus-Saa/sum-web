@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { ReactNode } from "react";
-import { ThemeContext } from "./context";
-import { useThemeState } from "./useThemeState";
+import { ReactNode } from 'react';
+import { ThemeContext } from './context';
+import { useThemeState } from './useThemeState';
 
 interface ThemeProviderProps {
   children: ReactNode;

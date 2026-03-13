@@ -7,10 +7,9 @@ import i18next from '@/i18n/config';
 // Create a fresh i18next instance for tests
 const i18nForTests = i18next.cloneInstance();
 
-
 beforeAll(async () => {
   if (!i18nForTests.isInitialized) {
-    await new Promise((resolve) => {
+    await new Promise(resolve => {
       i18nForTests.on('initialized', () => resolve(null));
     });
   }
@@ -18,9 +17,7 @@ beforeAll(async () => {
 
 describe('LanguageSwitcher Component', () => {
   const renderWithI18n = (component: React.ReactElement) => {
-    return render(
-      <I18nextProvider i18n={i18nForTests}>{component}</I18nextProvider>
-    );
+    return render(<I18nextProvider i18n={i18nForTests}>{component}</I18nextProvider>);
   };
 
   beforeEach(() => {

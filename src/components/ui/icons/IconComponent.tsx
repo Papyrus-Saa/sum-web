@@ -15,5 +15,3 @@ const IconComponent = ({ icon, title }: IconComponentProps): React.ReactElement 
 };
 
 export default IconComponent;
-
-

@@ -1,4 +1,3 @@
-
 import { render, screen, waitFor } from '@testing-library/react';
 import { useTranslation } from 'react-i18next';
 import { I18nProvider } from '@/i18n/I18nProvider';
