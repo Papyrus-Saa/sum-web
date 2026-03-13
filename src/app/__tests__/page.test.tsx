@@ -9,7 +9,7 @@ const i18nForTests = i18next.cloneInstance();
 
 beforeAll(async () => {
   if (!i18nForTests.isInitialized) {
-    await new Promise((resolve) => {
+    await new Promise(resolve => {
       i18nForTests.on('initialized', () => resolve(null));
     });
   }
