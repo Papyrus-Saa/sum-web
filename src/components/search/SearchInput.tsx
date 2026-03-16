@@ -22,7 +22,7 @@ export function SearchInput({ onSearch, loading = false, disabled = false }: Sea
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto">
+    <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto px-2 mb-6">
       <div className="flex flex-col gap-2">
         <div className="relative">
           <input
@@ -31,7 +31,7 @@ export function SearchInput({ onSearch, loading = false, disabled = false }: Sea
             onChange={e => setQuery(e.target.value)}
             disabled={disabled || loading}
             placeholder={t('searchPlaceholder')}
-            className="w-full px-4 py-2.5 text-base border border-border-l dark:border-border-d rounded bg-card-l dark:bg-card-d text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-secondary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-4 py-2.5 text-base border border-border-l dark:border-border-d rounded bg-card-l dark:bg-card-d text-main-d dark:text-main-l placeholder:text-placeholder-l dark:placeholder:text-placeholder-d focus:border-secondary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label={t('searchInputLabel')}
           />
           {loading && (
@@ -40,8 +40,9 @@ export function SearchInput({ onSearch, loading = false, disabled = false }: Sea
             </div>
           )}
         </div>
-        <p className="text-center mt-1 ">{t('searchHint')}</p>
-        <p className=""></p>
+        <p className="text-center mt-1 dark:text-placeholder-d text-placeholder-l text-xs lg:text-sm">
+          {t('searchHint')}
+        </p>
         <button
           type="submit"
           disabled={disabled || loading || !query.trim()}

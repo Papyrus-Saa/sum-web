@@ -18,11 +18,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="de" suppressHydrationWarning>
       <body
-        className={`${josefinSans.variable} [font-family:var(--font-josefin-sans)] antialiased bg-main-l dark:bg-main-d text-main-d dark:text-main-l min-h-screen`}
+        className={`${josefinSans.variable} [font-family:var(--font-josefin-sans)] antialiased bg-main-l dark:bg-main-d text-main-d dark:text-main-l  overflow-hidden`}
+        style={{ '--header-height': '64px' } as React.CSSProperties}
       >
         <RootLayoutClient>
           <Header />
-          {children}
+          <div className="">{children}</div>
         </RootLayoutClient>
       </body>
     </html>

@@ -48,16 +48,12 @@ export function SearchResult({ data, searchType }: SearchResultProps) {
   const secondaryLabel = searchType === 'code' ? t('tireSize') : t('tireCode');
 
   return (
-    <div className="w-full max-w-xl mx-auto mt-6 p-5 bg-card-l dark:bg-card-d border border-gray-200 dark:border-gray-700 rounded-lg">
+    <div className="w-full max-w-xl mx-auto  p-5 bg-card-l dark:bg-card-d border border-border-l dark:border-border-d rounded">
       {/* Main Result */}
       <div className="mb-4">
-        <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-          {secondaryLabel}
-        </span>
+        <span className="text-xs font-medium uppercase tracking-wide">{secondaryLabel}</span>
         <div className="flex items-center justify-between mt-2">
-          <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-            {primaryValue}
-          </span>
+          <span className="text-2xl font-bold text-main-d dark:text-main-l">{primaryValue}</span>
           <button
             onClick={() => handleCopy(primaryValue)}
             className="px-3 py-1.5 text-sm font-medium text-primary hover:bg-hover-l dark:hover:bg-hover-d rounded-md transition-colors flex items-center gap-1.5"
@@ -79,21 +75,19 @@ export function SearchResult({ data, searchType }: SearchResultProps) {
       </div>
 
       {/* Additional Info */}
-      <div className="space-y-2 pt-3 border-t border-gray-200 dark:border-gray-700">
+      <div className="space-y-2 pt-3 border-t border-border-l dark:border-border-d">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-600 dark:text-gray-400">{t('code')}:</span>
-          <span className="font-medium text-gray-900 dark:text-gray-100">{data.code}</span>
+          <span className="">{t('code')}:</span>
+          <span className="font-medium text-main-d dark:text-main-l">{data.code}</span>
         </div>
         <div className="flex justify-between text-sm">
-          <span className="text-gray-600 dark:text-gray-400">{t('normalized')}:</span>
-          <span className="font-medium text-gray-900 dark:text-gray-100">
-            {data.sizeNormalized}
-          </span>
+          <span className="">{t('normalized')}:</span>
+          <span className="font-medium text-main-d dark:text-main-l">{data.sizeNormalized}</span>
         </div>
         {data.sizeRaw !== data.sizeNormalized && (
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600 dark:text-gray-400">{t('original')}:</span>
-            <span className="font-medium text-gray-900 dark:text-gray-100">{data.sizeRaw}</span>
+            <span className="text-placeholder-l dark:text-placeholder-d">{t('original')}:</span>
+            <span className="font-medium text-main-d dark:text-main-l">{data.sizeRaw}</span>
           </div>
         )}
       </div>
@@ -101,7 +95,7 @@ export function SearchResult({ data, searchType }: SearchResultProps) {
       {/* Variant Info */}
       {data.variant && (
         <div className="mt-3 p-2.5 bg-primary/10 rounded-md">
-          <div className="text-sm text-gray-700 dark:text-gray-300">
+          <div className="text-sm text-main-d dark:text-main-l">
             <span className="font-medium">{t('variant')}: </span>
             {data.variant.loadIndex} {data.variant.speedIndex}
           </div>
@@ -111,17 +105,16 @@ export function SearchResult({ data, searchType }: SearchResultProps) {
       {/* Available Variants List */}
       {data.variants && data.variants.length > 0 && (
         <div className="mt-3">
-          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+          <span className="text-xs font-medium text-placeholder-l dark:text-placeholder-d">
             {t('availableVariants')}:
           </span>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {data.variants.map(variant => {
-              // Create unique key from loadIndex and speedIndex combination
               const key = `${variant.loadIndex ?? 'null'}-${variant.speedIndex ?? 'null'}`;
               return (
                 <span
                   key={key}
-                  className="px-2.5 py-1 text-xs bg-hover-l dark:bg-hover-d text-gray-700 dark:text-gray-300 rounded-md"
+                  className="px-2.5 py-1 text-xs bg-hover-l dark:bg-hover-d text-main-d dark:text-main-l rounded-md"
                 >
                   {variant.loadIndex} {variant.speedIndex}
                 </span>
@@ -133,13 +126,13 @@ export function SearchResult({ data, searchType }: SearchResultProps) {
 
       {/* Warning */}
       {data.warning && (
-        <div className="mt-3 p-2.5 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
+        <div className="mt-3 p-2.5 bg-error-l dark:bg-error-d border border-error-border-l dark:border-error-border-d rounded-md">
           <div className="flex items-start gap-2">
             <AlertTriangle
               size={16}
-              className="text-yellow-600 dark:text-yellow-400 mt-0.5 shrink-0"
+              className="text-error-text-l dark:text-error-text-d mt-0.5 shrink-0"
             />
-            <span className="text-xs text-yellow-800 dark:text-yellow-300">
+            <span className="text-xs text-error-text-l dark:text-error-text-d">
               {t(`warning_${data.warning}`) || data.warning}
             </span>
           </div>
